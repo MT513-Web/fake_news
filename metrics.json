@@ -1,0 +1,402 @@
+{
+  "dataset": {
+    "name": "Fake and Real News Dataset",
+    "kaggle_url": "https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset",
+    "kaggle_dataset_id": "clmentbisaillon/fake-and-real-news-dataset",
+    "files": [
+      "Fake.csv",
+      "True.csv"
+    ],
+    "fields": [
+      "title",
+      "text",
+      "subject",
+      "date"
+    ],
+    "source_used": {
+      "source": "local data/ copies (previously downloaded from mirror below)",
+      "mirror_used": "jicsjitu/Fake_News_Detection_Using_ML (GitHub, full)",
+      "fake_url": "https://raw.githubusercontent.com/jicsjitu/Fake_News_Detection_Using_ML/main/Fake.csv",
+      "true_url": "https://raw.githubusercontent.com/jicsjitu/Fake_News_Detection_Using_ML/main/True.csv"
+    },
+    "download_date": "2026-11-08",
+    "labels_note": "Labels are as provided in the source files, not independently verified.",
+    "label_mapping": {
+      "0": "Potentially Genuine",
+      "1": "Potentially Fake"
+    }
+  },
+  "exploration_FR01": {
+    "fake_file_rows_raw": 23481,
+    "true_file_rows_raw": 21417,
+    "total_rows_raw": 44898,
+    "columns": [
+      "title",
+      "text",
+      "subject",
+      "date"
+    ],
+    "columns_true_file": [
+      "title",
+      "text",
+      "subject",
+      "date"
+    ],
+    "missing_values": {
+      "Fake.csv": {
+        "title": 0,
+        "text": 0,
+        "subject": 0,
+        "date": 0
+      },
+      "True.csv": {
+        "title": 0,
+        "text": 0,
+        "subject": 0,
+        "date": 0
+      }
+    },
+    "duplicate_full_rows": {
+      "Fake.csv": 3,
+      "True.csv": 206
+    },
+    "duplicate_title_text_pairs": {
+      "Fake.csv": 5573,
+      "True.csv": 220
+    },
+    "label_distribution_raw": {
+      "fake (1)": 23481,
+      "genuine (0)": 21417
+    },
+    "subjects_fake": {
+      "News": 9050,
+      "politics": 6841,
+      "left-news": 4459,
+      "Government News": 1570,
+      "US_News": 783,
+      "Middle-east": 778
+    },
+    "subjects_true": {
+      "politicsNews": 11272,
+      "worldnews": 10145
+    },
+    "date_range_fake": [
+      "14-Feb-18",
+      "https://fedup.wpengine.com/wp-content/uploads/2015/04/hillarystreetart.jpg"
+    ],
+    "date_range_true": [
+      "April 1, 2016 ",
+      "September 9, 2017 "
+    ]
+  },
+  "preprocessing_FR02": {
+    "rows_before_cleaning": 44898,
+    "rows_after_removing_empty_text": 44889,
+    "duplicate_combined_text_removed": 6063,
+    "rows_after_deduplication": 38826,
+    "label_distribution_after_cleaning": {
+      "fake (1)": 17900,
+      "genuine (0)": 20926
+    },
+    "steps": [
+      "missing title/text/subject/date filled with empty string",
+      "rows with empty combined text removed",
+      "exact duplicate title+text pairs removed (before splitting, so no leakage)",
+      "lowercased, URLs removed, punctuation removed, extra spaces collapsed",
+      "stop-word removal by TF-IDF vectorizer (English stop words)",
+      "feature = title + text combined"
+    ]
+  },
+  "feature_extraction_FR03": {
+    "method": "TF-IDF on title + text combined",
+    "max_features": 5000,
+    "stop_words": "english",
+    "ngram_range": [
+      1,
+      1
+    ],
+    "vocabulary_size": 5000
+  },
+  "split_FR04": {
+    "method": "stratified 80/20, random_state=42, split BEFORE fitting TF-IDF",
+    "train_rows": 31060,
+    "test_rows": 7766,
+    "train_fake": 14320,
+    "train_genuine": 16740,
+    "test_fake": 3580,
+    "test_genuine": 4186,
+    "identical_texts_leaked_across_train_test": 0
+  },
+  "models_FR05_FR07": {
+    "Logistic Regression": {
+      "accuracy": 0.9842,
+      "precision": 0.9895,
+      "recall": 0.976,
+      "f1": 0.9827,
+      "confusion_matrix": [
+        [
+          4149,
+          37
+        ],
+        [
+          86,
+          3494
+        ]
+      ]
+    },
+    "Multinomial Naive Bayes": {
+      "accuracy": 0.933,
+      "precision": 0.9293,
+      "recall": 0.9251,
+      "f1": 0.9272,
+      "confusion_matrix": [
+        [
+          3934,
+          252
+        ],
+        [
+          268,
+          3312
+        ]
+      ]
+    },
+    "Support Vector Machine": {
+      "accuracy": 0.9911,
+      "precision": 0.9938,
+      "recall": 0.9869,
+      "f1": 0.9903,
+      "confusion_matrix": [
+        [
+          4164,
+          22
+        ],
+        [
+          47,
+          3533
+        ]
+      ]
+    }
+  },
+  "comparison_table": [
+    {
+      "model": "Logistic Regression",
+      "accuracy": 0.9842,
+      "precision": 0.9895,
+      "recall": 0.976,
+      "f1": 0.9827,
+      "confusion_matrix": [
+        [
+          4149,
+          37
+        ],
+        [
+          86,
+          3494
+        ]
+      ]
+    },
+    {
+      "model": "Multinomial Naive Bayes",
+      "accuracy": 0.933,
+      "precision": 0.9293,
+      "recall": 0.9251,
+      "f1": 0.9272,
+      "confusion_matrix": [
+        [
+          3934,
+          252
+        ],
+        [
+          268,
+          3312
+        ]
+      ]
+    },
+    {
+      "model": "Support Vector Machine",
+      "accuracy": 0.9911,
+      "precision": 0.9938,
+      "recall": 0.9869,
+      "f1": 0.9903,
+      "confusion_matrix": [
+        [
+          4164,
+          22
+        ],
+        [
+          47,
+          3533
+        ]
+      ]
+    }
+  ],
+  "best_model_by_f1": {
+    "model": "Support Vector Machine",
+    "accuracy": 0.9911,
+    "precision": 0.9938,
+    "recall": 0.9869,
+    "f1": 0.9903,
+    "confusion_matrix": [
+      [
+        4164,
+        22
+      ],
+      [
+        47,
+        3533
+      ]
+    ]
+  },
+  "error_analysis_FR07": {
+    "total_errors_best_model": 69,
+    "errors_out_of_test": 7766,
+    "error_rate": 0.0089,
+    "false_positives_genuine_called_fake": 22,
+    "false_negatives_fake_called_genuine": 47,
+    "note": "Errors are mostly on short / opinion-heavy pieces and on subjects where fake and genuine writing styles overlap (e.g. politics). A single short headline alone is much less reliable than a full article.",
+    "examples": [
+      {
+        "title": "Saudi Prince Arrested In LA For Sexual Assault After Woman Seen Screaming , Scaling 8-foot Wall",
+        "text_snippet": "Just a week after a Prince from Qatar was in hot water for racing his Ferrari down the streets of LA, a Saudi Prince is arrested for sexual assault. This case will be one to watch since the Prince doesn t have diplomatic immunity in this case.A bleeding woman screaming for help was seen attempting t",
+        "subject": "politics",
+        "date": "Sep 25, 2015",
+        "true_label": "Potentially Fake",
+        "predicted_label": "Potentially Genuine"
+      },
+      {
+        "title": "How Is Panama\u2019s \u201cMigrant Crisis\u201d Giving A FREE PASS TO THE U.S. To Anyone From Asia, Cuba, Africa, Haiti\u2026When Did We Become The World\u2019s Dumping Ground?",
+        "text_snippet": "Let this sink in The word has been out for some time now that the US borders are open. Now we have the President of Panama giving an even bigger free pass to ANYONE  to come to America. We are going to be Europe soon Obama is making sure of it Panama promised to help hundreds of migrants who have cr",
+        "subject": "politics",
+        "date": "Aug 10, 2016",
+        "true_label": "Potentially Fake",
+        "predicted_label": "Potentially Genuine"
+      },
+      {
+        "title": "BAN THE BURQA! Women Wearing A Burqa In Switzerland Could Face $9,000 Fine",
+        "text_snippet": "Do you agree with Switzerland s decision? Should America follow suit with European countries who are saying  no  to the burqa?Women who wear burqas and full face veils in public in a Swiss state could be fined up to $9000 under new rules imposed after a local referendum.Females muslims will be banne",
+        "subject": "Government News",
+        "date": "Jan 29, 2016",
+        "true_label": "Potentially Fake",
+        "predicted_label": "Potentially Genuine"
+      },
+      {
+        "title": "Commentary: Party leaders often disliked their nominee. It\u2019s the public vitriol that\u2019s new.",
+        "text_snippet": "GOP leaders have unleashed a stunning level of vitriol against their party\u2019s most successful presidential candidate.  House Speaker Paul Ryan (R-Wis.), emphatically declared last week that he was not ready to endorse Donald Trump, his party\u2019s presumptive presidential nominee. This move was unprecede",
+        "subject": "politicsNews",
+        "date": "May 10, 2016 ",
+        "true_label": "Potentially Genuine",
+        "predicted_label": "Potentially Fake"
+      },
+      {
+        "title": "Obama drinks coconut water to cool down in Laos",
+        "text_snippet": "U.S. President Barack\u00a0Obama\u00a0visited a street market in Luang Prabang on Wednesday (September 7), where he greeted residents and tasted fresh\u00a0coconut. He walked near the river of Mekong where women sell\u00a0coconut\u00a0drinks and tasted the local refreshment, posing for photographs and conversing with locals",
+        "subject": "politicsNews",
+        "date": "September 7, 2016 ",
+        "true_label": "Potentially Genuine",
+        "predicted_label": "Potentially Fake"
+      }
+    ]
+  },
+  "robustness_FR08": {
+    "sample_size": 200,
+    "method": "same 200 test articles, prediction compared before/after a trivial change",
+    "uppercase_flip_rate": 0.0,
+    "extra_spaces_flip_rate": 0.0,
+    "punctuation_change_flip_rate": 0.0,
+    "interpretation": "Capitalisation should not matter (text is lowercased). Extra spaces / punctuation should change almost nothing, because TF-IDF tokenises on word boundaries."
+  },
+  "performance_by_subject_best_model": {
+    "Government News": {
+      "n": 107,
+      "accuracy": 0.9346
+    },
+    "News": {
+      "n": 1741,
+      "accuracy": 0.9966
+    },
+    "US_News": {
+      "n": 160,
+      "accuracy": 1.0
+    },
+    "left-news": {
+      "n": 126,
+      "accuracy": 0.9762
+    },
+    "politics": {
+      "n": 1446,
+      "accuracy": 0.9786
+    },
+    "politicsNews": {
+      "n": 2209,
+      "accuracy": 0.9928
+    },
+    "worldnews": {
+      "n": 1977,
+      "accuracy": 0.997
+    }
+  },
+  "performance_by_year_best_model": {
+    "2015.0": {
+      "n": 54,
+      "accuracy": 0.9815
+    },
+    "2016.0": {
+      "n": 1257,
+      "accuracy": 0.9952
+    },
+    "2017.0": {
+      "n": 767,
+      "accuracy": 0.9961
+    }
+  },
+  "robustness_and_subject_note": "Subjects and years come from the source files. Fake and genuine files use different subject vocabularies (e.g. 'politics' vs 'politicsNews'), so subject comparisons describe the data as-is and are not a clean causal test.",
+  "model_export_FR10": {
+    "file": "model.json",
+    "model": "Support Vector Machine",
+    "model_type": "linear_svm",
+    "size_bytes": 148888,
+    "size_mb": 0.149,
+    "under_2mb": true,
+    "verified_agreement_with_sklearn": "200/200 test articles (100%) on a 200-item sample, checked 2026-11-08"
+  },
+  "test_predictions_from_exported_model": [
+    {
+      "id": "real_style",
+      "headline": "As U.S. budget fight looms, Republicans flip their fiscal script",
+      "text": "WASHINGTON (Reuters) - The head of a conservative Republican faction in the U.S. Congress, who voted this month for a huge expansion of the national debt to pay for tax cuts, called himself a fiscal conservative on Sunday and urged budget restraint in 2018.",
+      "score": -2.36,
+      "probability_fake": 0.0863,
+      "prediction": "Potentially Genuine"
+    },
+    {
+      "id": "fake_style",
+      "headline": "Donald Trump Sends Out Embarrassing New Year's Eve Message; This is Disturbing",
+      "text": "Donald Trump just could not wish all Americans a Happy New Year and leave it at that. Instead, he had to give a shout out to his enemies, haters and the very dishonest fake news media. This is nothing new for Trump. He is a despicable, petty, infantile president who cannot rise above the gutter.",
+      "score": 0.9063,
+      "probability_fake": 0.7122,
+      "prediction": "Potentially Fake"
+    },
+    {
+      "id": "neutral",
+      "headline": "Local council announces new recycling schedule for residents next month",
+      "text": "The city council said the new recycling schedule will begin on Monday and bins will be collected weekly. Residents are asked to place bins outside by 7am.",
+      "score": 0.0176,
+      "probability_fake": 0.5044,
+      "prediction": "Potentially Fake"
+    }
+  ],
+  "visualizations_FR09": [
+    "accuracy_by_subject.png",
+    "confusion_matrix_best.png",
+    "distribution.png",
+    "model_comparison.png",
+    "robustness.png"
+  ],
+  "limits": [
+    "Trained on 2015-2018 US political news; it will be much less reliable on other topics, languages, or recent news.",
+    "It learns writing style / textual patterns, not facts \u2014 a well-written fake can pass and a poorly written genuine article can fail.",
+    "Short headlines alone are far less reliable than a full article.",
+    "Labels in the source dataset were not independently verified by us."
+  ],
+  "performance_by_year_best_model_note": "Only 2078 of 7766 test articles have a parseable year; date column has mixed formats and a few polluted values, so year results cover that subset only."
+}
